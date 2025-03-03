@@ -1,92 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
-interface Movie {
-  title: string;
-  description: string;
-  posterURL: string;
-  rating: number;
-}
-
-interface FilterProps {
-  setFilter: React.Dispatch<React.SetStateAction<{ title: string; rating: number }>>;
-}
-
-interface MovieCardProps {
-  movie: Movie;
-}
-
-interface MovieListProps {
-  movies: Movie[];
-}
-
-const Container = styled.div`
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-`;
-
-const MovieCardContainer = styled.div`
-  border: 1px solid #ddd;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-`;
-
-const MovieImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-`;
-
-const MovieTitle = styled.h3`
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 10px;
-`;
-
-const MovieDescription = styled.p`
-  font-size: 14px;
-`;
-
-const MovieRating = styled.p`
-  font-weight: bold;
-`;
-
-const MovieGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-`;
-
-const FilterContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-`;
-
-const Input = styled.input`
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  flex: 1;
-`;
-
-const Button = styled.button`
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-`;
+import {FilterProps, Movie, MovieCardProps, MovieListProps} from "./types.ts";
+import {MOVIES} from "./movies.ts";
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => (
   <MovieCardContainer>
-    <MovieImage src={movie.posterURL} alt={movie.title} />
+    <MovieImageWrapper>
+      <MovieImage src={movie.posterURL} alt={movie.title} />
+    </MovieImageWrapper>
     <MovieTitle>{movie.title}</MovieTitle>
     <MovieDescription>{movie.description}</MovieDescription>
     <MovieRating>Rating: {movie.rating}</MovieRating>
@@ -117,70 +38,8 @@ const Filter: React.FC<FilterProps> = ({ setFilter }) => (
 );
 
 export default function App() {
-  const [movies, setMovies] = useState<Movie[]>([
-    {
-      title: "Inception",
-      description: "A mind-bending thriller by Christopher Nolan.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 8.8,
-    },
-    {
-      title: "Interstellar",
-      description: "A space adventure beyond time and space.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 8.6,
-    },
-    {
-      title: "The Dark Knight",
-      description: "A gritty and realistic take on Batman.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 9.0,
-    },
-    {
-      title: "Fight Club",
-      description: "An underground fight club with a deeper meaning.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 8.8,
-    },
-    {
-      title: "Forrest Gump",
-      description: "The life story of a simple man with a big heart.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 8.8,
-    },
-    {
-      title: "The Matrix",
-      description: "A sci-fi action film that questions reality.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 8.7,
-    },
-    {
-      title: "The Shawshank Redemption",
-      description: "A man's resilience and hope in prison.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 9.3,
-    },
-    {
-      title: "Gladiator",
-      description: "A Roman general seeks revenge for his family.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 8.5,
-    },
-    {
-      title: "The Godfather",
-      description: "A powerful story of a mafia family.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 9.2,
-    },
-    {
-      title: "Pulp Fiction",
-      description: "A mix of interwoven crime stories.",
-      posterURL: "https://via.placeholder.com/150",
-      rating: 8.9,
-    },
-  ]);
-
-  const [filter, setFilter] = useState<{ title: string; rating: number }>({ title: "", rating: 0 });
+  const [movies, setMovies] = useState<Movie[]>(MOVIES);
+  const [filter, setFilter] = useState({ title: "", rating: 0 });
 
   const [newMovie, setNewMovie] = useState<Movie>({
     title: "",
@@ -205,7 +64,7 @@ export default function App() {
       <h1>Movie App</h1>
       <Filter setFilter={setFilter} />
       <MovieList movies={filteredMovies} />
-      <div>
+      <BorderedSection>
         <h2>Add a New Movie</h2>
         <Input
           type="text"
@@ -232,7 +91,91 @@ export default function App() {
           onChange={(e) => setNewMovie({ ...newMovie, rating: Number(e.target.value) })}
         />
         <Button onClick={addMovie}>Add Movie</Button>
-      </div>
+      </BorderedSection>
     </Container>
   );
 }
+
+
+// Styled components go here
+
+const Container = styled.div`
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+`;
+
+const MovieCardContainer = styled.div`
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const MovieImageWrapper = styled.div`
+    height: 200px;
+    border-radius: 8px;
+    background: #ddd;
+`
+
+const MovieImage = styled.img`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+    background: gray;
+`;
+
+const MovieTitle = styled.h3`
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+`;
+
+const MovieDescription = styled.p`
+  font-size: 14px;
+`;
+
+const MovieRating = styled.p`
+  font-weight: bold;
+`;
+
+const MovieGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+`;
+
+const BorderedSection = styled.div`
+    border: 1px solid #ddd;
+    padding: 30px;
+    border-radius: 8px;
+    margin-top: 50px;
+`
+
+const Input = styled.input`
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  flex: 1;
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+
+const Button = styled.button`
+    background-color: #111111;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+`;
